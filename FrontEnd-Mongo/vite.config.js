@@ -8,7 +8,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://backend-mongodb-atlas.onrender.com/',
+        target: 'http://backend-mongodb-atlas.onrender.com/',
         changeOrigin: true,
         secure: false,
       }
