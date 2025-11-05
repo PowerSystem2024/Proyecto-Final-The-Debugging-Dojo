@@ -9,9 +9,11 @@ import PagoExitoso from './pages/PagoExitoso'; // ← Asegúrate de tener esta i
 import Footer from './pages/Footer'; // ← Importa el Footer
 import DebugEnv from './components/DebugEnv';
 import './index.css';
+import { ToastProvider } from './context/ToastContext';
 
 function App() {
   return (
+     <ToastProvider>
     <CartProvider>
       <Router>
         <div className="App">
@@ -36,6 +38,7 @@ function App() {
         </div>
       </Router>
     </CartProvider>
+    </ToastProvider>
   );
 }
 

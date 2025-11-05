@@ -1,23 +1,19 @@
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext'; // 👈 Nueva importación
 
 const ProductoCard = ({ producto }) => {
   const { addToCart } = useCart();
-  const navigate = useNavigate(); // ← Agregar este hook
+  const { success } = useToast(); // 👈 Hook de notificaciones
 
-  const handleAddToCart = (e) => {
-    e.stopPropagation(); // ← Prevenir que el click se propague al contenedor principal
+  const handleAddToCart = () => {
     addToCart(producto);
-    alert(`¡${producto.nombre} añadido al carrito!`);
-  };
-
-  const handleCardClick = () => {
-    console.log('🖱️ Clicked product ID:', producto._id); // Debug
-    navigate(`/producto/${producto._id}`); // ← Navegar al detalle del producto
+    // Mostrar notificación
+    success(`✅ ${producto.nombre} añadido al carrito`);
   };
 
   return (
-    <div className="producto-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
+    <div className="producto-card">
       <div className="producto-image">
         <img 
           src={producto.imagen || '/placeholder-image.jpg'} 
