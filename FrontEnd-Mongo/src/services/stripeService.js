@@ -103,7 +103,7 @@ export const stripeService = {
         }
       })
       .catch(error => {
-        console.log('⚠️ Error enviando a n8n, pero continuamos con el pago');
+        console.log('⚠️ Error enviando a n8n, pero continuamos con el pago ', error);
       });
 
     } catch (error) {
@@ -168,7 +168,7 @@ export const stripeService = {
         }
       })
       .catch(error => {
-        console.log('⚠️ Error enviando confirmación, pero no afecta el proceso');
+        console.log('⚠️ Error enviando confirmación, pero no afecta el proceso ', error);
       });
 
     } catch (error) {
