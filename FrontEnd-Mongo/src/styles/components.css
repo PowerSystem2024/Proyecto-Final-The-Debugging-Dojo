@@ -1,0 +1,37 @@
+/* Botones, estados, loading, not-found, demo credentials, user menu */
+.btn-primary {
+  display: inline-block; background-color: #3182ce; color: white; padding: 12px 30px;
+  text-decoration: none; border-radius: 5px; font-weight: bold; transition: transform .3s, background-color .3s;
+  border: none; cursor: pointer;
+}
+.btn-primary:hover { transform: translateY(-2px); background-color: #2b6cb0; }
+.btn-secondary {
+  background: #e2e8f0; color: #2d3748; border: none; padding: .9rem 2rem;
+  border-radius: 6px; text-decoration: none; font-weight: bold; transition: background .3s; cursor: pointer;
+}
+.btn-secondary:hover { background: #cbd5e0; }
+.cart-link { position: relative; }
+.cart-badge {
+  position: absolute; top: -8px; right: -8px; background: #e53e3e; color: white; border-radius: 50%;
+  width: 20px; height: 20px; font-size: .7rem; display: flex; align-items: center; justify-content: center;
+}
+.error-message { background: #fed7d7; color: #742a2a; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; font-weight: 500; text-align: center; }
+.loading-container { text-align: center; padding: 3rem; }
+.loading-spinner {
+  border: 4px solid #f3f3f3; border-top: 4px solid #4299e1; border-radius: 50%;
+  width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 1rem;
+}
+@keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+.not-found { text-align: center; padding: 3rem; }
+.user-menu { display: flex; align-items: center; gap: 1rem; }
+.user-greeting { color: #cbd5e0; font-size: .9rem; }
+.btn-logout {
+  background: none; border: 1px solid #cbd5e0; color: #cbd5e0;
+  padding: .5rem 1rem; border-radius: 5px; cursor: pointer; transition: all .3s;
+}
+.btn-logout:hover { background: #e53e3e; border-color: #e53e3e; color: white; }
+.demo-credentials { background: #f7fafc; padding: 1rem; border-radius: 5px; margin-top: 1.5rem; border-left: 4px solid #4299e1; }
+.demo-credentials h4 { margin: 0 0 .5rem 0; color: #2d3748; }
+.demo-credentials p { margin: .25rem 0; font-size: .9rem; color: #4a5568; }
+
+

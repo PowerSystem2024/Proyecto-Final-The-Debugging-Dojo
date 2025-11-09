@@ -1,0 +1,135 @@
+/* =========================
+   PRODUCTO DETAIL (dark)
+   ========================= */
+.producto-detail-container{
+  max-width:1200px; margin:2rem auto; padding:0 1.5rem;
+  color:#e5e7eb;
+}
+.btn-back{
+  display:inline-block; background:none; border:none; color:#93c5fd;
+  font-weight:600; cursor:pointer; margin-bottom:1rem;
+}
+.btn-back:hover{ text-decoration:underline; }
+
+/* Card principal */
+.producto-detail{
+  display:flex; flex-wrap:wrap; gap:2rem;
+  background:#0f172a; border:1px solid #1f2937;
+  border-radius:16px; padding:2rem;
+  box-shadow:0 10px 25px rgba(0,0,0,.3);
+}
+
+/* Imagen */
+.producto-detail-image{
+  flex:1; min-width:320px; display:flex; justify-content:center; align-items:center;
+}
+.producto-detail-image img{
+  width:100%; max-width:500px; border-radius:14px;
+  background:#111827; object-fit:contain;
+  box-shadow:0 0 18px rgba(0,0,0,.45);
+}
+
+/* Info */
+.producto-detail-info{
+  flex:1; display:flex; flex-direction:column; gap:1.25rem;
+}
+.producto-detail-nombre{
+  font-size:2rem; font-weight:700; color:#f8fafc;
+}
+.producto-detail-descripcion{
+  font-size:1rem; line-height:1.6; color:#cbd5e1;
+  background:rgba(17,24,39,.6); border-left:3px solid #4f46e5;
+  padding:1rem; border-radius:10px;
+}
+
+/* Meta */
+.producto-detail-meta{
+  display:flex; flex-direction:column; gap:.75rem;
+  background:linear-gradient(135deg,#111827,#1e293b);
+  border:1px solid #233047; border-radius:12px; padding:1rem 1.25rem;
+}
+.producto-detail-precio{ font-size:1.8rem; font-weight:700; color:#60a5fa; }
+.producto-detail-stock{ font-size:.95rem; font-weight:500; color:#22c55e; }
+.producto-detail-stock.low-stock{ color:#f87171; }
+.producto-detail-categoria{
+  background:#4338ca; color:#fff; padding:.35rem .8rem;
+  border-radius:999px; font-size:.85rem; width:fit-content;
+}
+
+/* Botones */
+.producto-detail-actions{ display:flex; flex-wrap:wrap; gap:1rem; margin-top:auto; }
+.btn-add-to-cart-large{
+  background:#3b82f6; color:white; font-weight:700; border:none; border-radius:10px;
+  padding:1rem 1.5rem; cursor:pointer; transition:transform .1s, filter .2s;
+}
+.btn-add-to-cart-large:hover:not(:disabled){ filter:brightness(1.08); transform:translateY(-1px); }
+.btn-add-to-cart-large:disabled{ opacity:.6; cursor:not-allowed; }
+.btn-secondary{
+  background:#111827; color:#e5e7eb; border:1px solid #374151; border-radius:10px;
+  padding:1rem 1.5rem; font-weight:600; text-decoration:none;
+}
+.btn-secondary:hover{ border-color:#4b5563; }
+
+/* Estados */
+.loading-container, .error-message, .not-found{
+  background:#0b1220; border:1px solid #1f2937; border-radius:12px;
+  padding:2rem; text-align:center; color:#e5e7eb;
+}
+.loading-spinner{
+  width:40px; height:40px; border:4px solid #1e3a8a; border-top-color:#93c5fd;
+  border-radius:50%; margin:0 auto 1rem auto; animation:spin 1s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* Responsividad */
+@media(max-width:900px){
+  .producto-detail{ flex-direction:column; align-items:center; text-align:center; }
+  .producto-detail-image img{ max-width:100%; }
+  .producto-detail-descripcion{ text-align:left; }
+  .producto-detail-actions{ flex-direction:column; width:100%; }
+  .btn-add-to-cart-large, .btn-secondary{ width:100%; }
+}
+
+
+/* =========================
+   Espaciado general y separación visual
+   ========================= */
+.producto-detail-container{
+  margin-top: 5rem;   /* separa de la navbar */
+  margin-bottom: 5rem; /* separa del footer */
+  padding-top: 1rem;
+}
+
+.producto-detail{
+  background: radial-gradient(circle at top left, #111827 0%, #0f172a 60%, #0b1120 100%);
+  border: 1px solid #1e293b;
+  box-shadow: 0 16px 32px rgba(0,0,0,.45);
+  padding: 2.5rem 2rem;
+}
+
+.producto-detail-image img{
+  border: 1px solid #1e293b;
+  box-shadow: 0 8px 30px rgba(0,0,0,.5);
+}
+
+/* Animación fade-up sutil */
+@keyframes fadeUpSoft {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.producto-detail-container{
+  opacity: 0;
+  animation: fadeUpSoft 0.6s ease-out forwards;
+  animation-delay: 0.15s;
+}
+
+/* Evita doble ejecución en re-render */
+.producto-detail-container:has(.producto-detail){
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce){
+  * { animation: none !important; transition: none !important; }
+}
+

@@ -1,19 +1,26 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
-import { useToast } from '../context/ToastContext'; // 👈 Nueva importación
+import { useToast } from '../context/ToastContext';
 
-const ProductoCard = ({ producto }) => {
+const ProductoCard = ({ producto, onVerDetalle }) => {
   const { addToCart } = useCart();
-  const { success } = useToast(); // 👈 Hook de notificaciones
+  const { success } = useToast();
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.preventDefault();      // evita que el click dispare navegación
+    e.stopPropagation();     // bloquea el click del contenedor
     addToCart(producto);
-    // Mostrar notificación
     success(`✅ ${producto.nombre} añadido al carrito`);
   };
 
+  const handleClick = () => {
+    if (onVerDetalle) {
+      onVerDetalle(producto._id || producto.id);
+    }
+  };
+
   return (
-    <div className="producto-card">
+    <div className="producto-card" onClick={handleClick}>
       <div className="producto-image">
         <img 
           src={producto.imagen || '/placeholder-image.jpg'} 

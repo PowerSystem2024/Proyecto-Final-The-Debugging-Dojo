@@ -1,0 +1,72 @@
+/* ===== Footer SLIM v2 ===== */
+:root{
+  --ft-bg:#0e1626;        /* inferior: más claro que antes */
+  --ft-band:#1b2740;      /* superior: azul grisáceo tenue */
+  --ft-text:#f1f5ff;      /* texto más luminoso */
+  --ft-muted:#b8c3de;     /* gris claro */
+  --ft-link:#b4b9ff;      /* acento violeta suave */
+  --ft-brd:rgba(255,255,255,.12);
+}
+
+
+.ft{ color:var(--ft-text); background:var(--ft-bg); }
+.ft .container{ max-width:1200px; margin:0 auto; padding:0 16px; }
+
+/* banda superior con leve contraste */
+.ft__band{
+  background: linear-gradient(180deg,var(--ft-band),var(--ft-bg));
+  border-top:1px solid var(--ft-brd);
+  border-bottom:1px solid rgba(0,0,0,.45);
+  padding:40px 0;
+}
+
+/* grid 4 columnas limpias */
+.ft__grid{
+  display:grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap:32px;
+}
+
+/* marca */
+.ft__brand h3{ font-size:1.3rem; font-weight:900; margin-bottom:6px; }
+.ft__brand p{ color:var(--ft-muted); max-width:40ch; }
+.ft__badges{ display:flex; gap:8px; margin-top:10px; }
+.ft__badges span{
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--ft-brd);
+  padding:.35rem .55rem;
+  border-radius:8px;
+  font-weight:700;
+}
+
+/* columnas */
+.ft__col h4{ font-size:1rem; font-weight:800; margin-bottom:10px; }
+.ft__col ul{ list-style:none; display:grid; gap:8px; }
+.ft__col a{ color:var(--ft-link); text-decoration:none; }
+.ft__col a:hover{ text-decoration:underline; }
+
+/* contacto */
+.ft__contact li{ color:var(--ft-text); }
+
+/* banda inferior legal */
+.ft__bottom{ background:#0c1424; border-top:1px solid var(--ft-brd); }
+.ft__bottom__wrap{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:14px 0; color:var(--ft-muted);
+}
+.ft__legal{ display:flex; gap:16px; }
+.ft__legal a{ color:var(--ft-muted); text-decoration:none; }
+.ft__legal a:hover{ color:var(--ft-link); }
+
+/* respiración respecto a la sección anterior */
+.reviews{ margin-bottom:0; }
+.ft{ margin-top:0; }
+
+/* responsive */
+@media (max-width: 1024px){
+  .ft__grid{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px){
+  .ft__grid{ grid-template-columns: 1fr; }
+  .ft__bottom__wrap{ flex-direction:column; }
+}

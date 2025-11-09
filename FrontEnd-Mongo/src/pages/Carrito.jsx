@@ -3,220 +3,130 @@ import { useCart } from '../context/CartContext';
 import { stripeService } from '../services/stripeService';
 import { Link } from 'react-router-dom';
 
+const formatPrice = (n) =>
+  new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n);
+
 const Carrito = () => {
-  const { 
-    items: cartItems, 
-    removeFromCart, 
-    clearCart, 
-    total,
-    itemCount 
-  } = useCart();
-  
+  const { items: cartItems, removeFromCart, clearCart, total } = useCart();
+
   const [customerEmail, setCustomerEmail] = useState('');
-  const [customerName, setCustomerName] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [customerName,   setCustomerName]   = useState('');
+  const [loading,        setLoading]        = useState(false);
+  const [error,          setError]          = useState('');
 
   const handleCheckout = async () => {
     try {
-      setLoading(true);
-      setError('');
+      setLoading(true); setError('');
+      if (!customerEmail || !customerName) { setError('Ingresa email y nombre completo'); return; }
+      if (!cartItems || cartItems.length === 0) { setError('El carrito está vacío'); return; }
+      if (!stripeService.isConfigured()) { setError('Stripe no está configurado'); return; }
 
-      console.log('🛒 Iniciando checkout...');
-
-      // Validaciones
-      if (!customerEmail || !customerName) {
-        setError('Por favor ingresa tu email y nombre completo');
-        return;
-      }
-
-      if (!cartItems || cartItems.length === 0) {
-        setError('El carrito está vacío');
-        return;
-      }
-
-      if (!stripeService.isConfigured()) {
-        setError('Stripe no está configurado correctamente');
-        return;
-      }
-
-      console.log('📦 Items del carrito:', cartItems);
-      console.log('👤 Cliente:', { email: customerEmail, name: customerName });
-
-      // ✅ GUARDAR DATOS DEL CLIENTE TEMPORALMENTE
       localStorage.setItem('lastCustomer', JSON.stringify({
-        email: customerEmail,
-        name: customerName,
-        cartItems: cartItems,
-        timestamp: new Date().toISOString()
+        email: customerEmail, name: customerName, cartItems, timestamp: new Date().toISOString()
       }));
 
-      // ✅ ENVIAR DATOS DEL CLIENTE A N8N INMEDIATAMENTE
       await stripeService.sendCustomerDataToN8N(customerEmail, customerName, cartItems);
 
-      // Crear sesión de Stripe
-      const checkoutData = await stripeService.createCheckoutSession(
-        cartItems, 
-        customerEmail, 
-        customerName
-      );
-      
-      console.log('🎫 Checkout data recibido:', checkoutData);
-      
-      // Redirigir a Stripe
+      const checkoutData = await stripeService.createCheckoutSession(cartItems, customerEmail, customerName);
       await stripeService.redirectToCheckout(checkoutData);
-      
-    } catch (error) {
-      console.error('❌ Error durante el checkout:', error);
-      setError(`Error al procesar el pago: ${error.message}`);
+    } catch (e) {
+      setError(`Error al procesar el pago: ${e.message}`);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRemoveItem = (productId) => {
-    removeFromCart(productId);
-  };
-
-  const handleClearCart = () => {
-    clearCart();
-  };
-
-  // Función para probar n8n sin Stripe
-  const handleTestN8N = async () => {
-    try {
-      if (!customerEmail || !customerName) {
-        setError('Por favor ingresa tu email y nombre completo');
-        return;
-      }
-
-      console.log('🧪 Probando envío a n8n...');
-      
-      // ✅ ENVIAR DATOS DEL CLIENTE A N8N
-      await stripeService.sendCustomerDataToN8N(customerEmail, customerName, cartItems);
-      
-      // ✅ SIMULAR PAGO EXITOSO
-      await stripeService.simulateSuccessfulPayment(customerEmail, customerName, cartItems);
-      
-      alert('✅ Datos enviados a n8n correctamente. Revisa tu webhook.');
-      
-    } catch (error) {
-      console.error('❌ Error probando n8n:', error);
-      setError(`Error probando n8n: ${error.message}`);
-    }
-  };
-
-  if (cartItems.length === 0) {
+  if (!cartItems || cartItems.length === 0) {
     return (
-      <div className="carrito-vacio">
-        <h2>Tu carrito está vacío</h2>
-        <p>Agrega algunos productos para continuar.</p>
-        <Link to="/productos" className="btn-primary">
-          Ver Productos
-        </Link>
+      <div className="cart-empty">
+        <div className="cart-empty-card">
+          <div className="cart-empty-emoji">🛍️</div>
+          <h2>Tu carrito está vacío</h2>
+          <p>Agregá productos para continuar.</p>
+          <Link to="/productos" className="btn-primary">Ver productos</Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="carrito-container">
-      <h2>Carrito de Compras</h2>
-      
-  
+    <div className="cart-wrap">
+      <div className="cart-header">
+        <h1>Carrito</h1>
+        <span className="cart-count">{cartItems.length} ítem(s)</span>
+      </div>
 
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
+      {error && <div className="cart-error">{error}</div>}
 
-      {/* Lista de productos en el carrito */}
-      <div className="carrito-items">
-        {cartItems.map((item) => (
-          <div key={item._id} className="carrito-item">
-            <img 
-              src={item.imagen} 
-              alt={item.nombre}
-              className="carrito-item-image"
-              onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/80x80/4A5568/FFFFFF?text=Imagen';
-              }}
-            />
-            <div className="carrito-item-info">
-              <h3>{item.nombre}</h3>
-              <p>{item.descripcion}</p>
-              <p className="carrito-item-precio">${item.precio} x {item.quantity}</p>
-              <p className="carrito-item-subtotal">Subtotal: ${(item.precio * item.quantity).toFixed(2)}</p>
-            </div>
-            <button 
-              onClick={() => handleRemoveItem(item._id)}
-              className="btn-remove"
-            >
-              🗑️
-            </button>
+      <div className="cart-grid">
+        {/* Columna izquierda: items */}
+        <div className="cart-list">
+          {cartItems.map((item) => (
+            <article key={item._id} className="cart-item">
+              <img
+                src={item.imagen}
+                alt={item.nombre}
+                className="cart-item-img"
+                onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/96x96/1f2937/ffffff?text=Sin+img'; }}
+              />
+              <div className="cart-item-info">
+                <h3 className="cart-item-title">{item.nombre}</h3>
+                <p className="cart-item-desc">{item.descripcion}</p>
+                <div className="cart-item-meta">
+                  <span className="cart-item-price">{formatPrice(item.precio)}</span>
+                  <span className="cart-item-qty">x {item.quantity}</span>
+                  <span className="cart-item-sub">{formatPrice(item.precio * item.quantity)}</span>
+                </div>
+              </div>
+              <button className="cart-remove" onClick={() => removeFromCart(item._id)} aria-label="Quitar">
+                🗑️
+              </button>
+            </article>
+          ))}
+
+          <div className="cart-actions">
+            <Link to="/productos" className="btn-secondary">← Seguir comprando</Link>
+            <button onClick={clearCart} className="btn-danger">Vaciar carrito</button>
           </div>
-        ))}
-      </div>
-
-      {/* Total */}
-      <div className="carrito-total">
-        <h3>Total: ${total.toFixed(2)}</h3>
-        {total > 50 && (
-          <p className="envio-gratis">🎉 ¡Envío gratis en compras mayores a $50!</p>
-        )}
-      </div>
-
-      {/* Formulario de checkout */}
-      <div className="checkout-form">
-        <h3>Información del Comprador</h3>
-        
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            id="email"
-            type="email"
-            value={customerEmail}
-            onChange={(e) => setCustomerEmail(e.target.value)}
-            placeholder="tu@email.com"
-            required
-          />
-        </div>
-        
-        <div className="form-group">
-          <label htmlFor="nombre">Nombre Completo:</label>
-          <input
-            id="nombre"
-            type="text"
-            value={customerName}
-            onChange={(e) => setCustomerName(e.target.value)}
-            placeholder="Tu nombre completo"
-            required
-          />
         </div>
 
-       
-        <div className="carrito-actions">
-          <Link to="/productos" className="btn-secondary">
-            ← Seguir Comprando
-          </Link>
-          
-          <button 
-            onClick={handleCheckout}
-            disabled={loading || !stripeService.isConfigured()}
-            className="checkout-button"
-          >
-            {loading ? 'Procesando...' : 'Proceder al Pago'}
-          </button>
+        {/* Columna derecha: resumen */}
+        <aside className="cart-summary">
+          <h2>Resumen</h2>
+          <div className="summary-row">
+            <span>Subtotal</span>
+            <span>{formatPrice(total)}</span>
+          </div>
+          <div className="summary-row">
+            <span>Envío</span>
+            <span>{total > 50000 ? 'Gratis' : formatPrice(0)}</span>
+          </div>
+          <div className="summary-total">
+            <span>Total</span>
+            <span>{formatPrice(total)}</span>
+          </div>
 
-          <button 
-            onClick={handleClearCart}
-            className="btn-clear"
-          >
-            Vaciar Carrito
-          </button>
-        </div>
-
-      
+          <div className="checkout-form">
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input id="email" type="email" value={customerEmail}
+                     onChange={(e) => setCustomerEmail(e.target.value)} placeholder="tu@email.com" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="nombre">Nombre completo</label>
+              <input id="nombre" type="text" value={customerName}
+                     onChange={(e) => setCustomerName(e.target.value)} placeholder="Nombre y apellido" />
+            </div>
+            <button
+              className="btn-primary btn-buy"
+              onClick={handleCheckout}
+              disabled={loading || !stripeService.isConfigured()}
+            >
+              {loading ? 'Procesando…' : 'Proceder al pago'}
+            </button>
+            <p className="summary-hint">Pagos protegidos SSL</p>
+          </div>
+        </aside>
       </div>
     </div>
   );

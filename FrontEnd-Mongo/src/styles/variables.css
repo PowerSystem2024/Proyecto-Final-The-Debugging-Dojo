@@ -1,0 +1,12 @@
+:root{
+  --nv-h: 60px;
+  --nv-bg: #2b2f39;
+  --nv-bg-light: #ffffffcc;
+  --nv-surface: #141823;
+  --nv-surface-light: #ffffff;
+  --nv-border: rgba(255, 21, 21, 0.14);
+  --nv-text: #eef2ff;
+  --nv-text-dark: #0f172a;
+  --nv-accent: #4f46e5;
+  --nv-accent-strong: #4338ca;
+}

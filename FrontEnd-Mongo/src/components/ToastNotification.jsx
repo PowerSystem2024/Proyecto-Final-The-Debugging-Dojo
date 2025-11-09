@@ -1,26 +1,30 @@
-import React, { useEffect } from 'react';
-import './ToastNotification.css';
+// src/components/ToastNotification.jsx
+import React, { useEffect } from "react";
 
-const ToastNotification = ({ message, type = 'success', onClose, duration = 3000 }) => {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, duration);
-
-    return () => clearTimeout(timer);
-  }, [onClose, duration]);
-
-  return (
-    <div className={`toast-notification toast-${type}`}>
-      <div className="toast-content">
-        <span className="toast-icon">
-          {type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
-        </span>
-        <span className="toast-message">{message}</span>
-        <button className="toast-close" onClick={onClose}>×</button>
-      </div>
-    </div>
-  );
+const TYPE_CLASS = {
+  success: "toast-success",
+  error: "toast-error",
+  info: "toast-info",
 };
 
-export default ToastNotification;
+export default function ToastNotification({
+  message,
+  type = "success",
+  duration = 3000,
+  onClose,
+  showIcon = false,   // <- opcional
+  icon = null,        // <- permite pasar uno custom si querés
+}) {
+  useEffect(() => {
+    const t = setTimeout(() => onClose?.(), duration);
+    return () => clearTimeout(t);
+  }, [duration, onClose]);
+
+  return (
+    <div className={`toast ${TYPE_CLASS[type]}`}>
+      {showIcon && icon ? <span className="toast-icon">{icon}</span> : null}
+      <span className="toast-msg">{message}</span>
+      <button className="close" aria-label="Cerrar" onClick={onClose}>×</button>
+    </div>
+  );
+}

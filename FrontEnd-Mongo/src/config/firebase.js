@@ -1,14 +1,14 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
-// Tu configuración de Firebase
+// Configuración desde variables de entorno
 const firebaseConfig = {
-  apiKey: "AIzaSyAAee7n7hPmgxQDDfqCwcirNq3LFtXmHNo",
-  authDomain: "proyectofinal-db6c8.firebaseapp.com",
-  projectId: "proyectofinal-db6c8",
-  storageBucket: "proyectofinal-db6c8.firebasestorage.app",
-  messagingSenderId: "1018835670891",
-  appId: "1:1018835670891:web:acd460c969b3ddc6001e2e"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Initialize Firebase

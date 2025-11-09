@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { productosAPI } from '../services/api';
-import ProductoList from '../components/ProductoList';
+import ProductoList from '../components/ProductoList';  // <— FALTABA
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    cargarProductos();
-  }, []);
+  useEffect(() => { cargarProductos(); }, []);
 
   const cargarProductos = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await productosAPI.getAll();
-      setProductos(response.data.data.productos);
+      const res = await productosAPI.getAll();
+      const data = res?.data?.data?.productos ?? res?.data?.productos ?? [];
+      setProductos(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Error cargando productos:', err);
       setError('Error al cargar los productos. Verifica que el servidor esté corriendo.');
@@ -25,38 +26,22 @@ const Productos = () => {
     }
   };
 
-  const handleVerDetalle = (id) => {
-    // Navegar al detalle del producto
-    alert(`Ver detalle del producto: ${id}`);
-  };
+  const handleVerDetalle = (id) => navigate(`/productos/${id}`);
 
   if (error) {
     return (
       <div className="error-container">
         <h2>Error</h2>
         <p>{error}</p>
-        <button onClick={cargarProductos} className="btn-retry">
-          Reintentar
-        </button>
+        <button onClick={cargarProductos} className="btn-retry">Reintentar</button>
       </div>
     );
   }
 
   return (
     <div className="productos-page">
-      <div className="page-header">
-        {/* <h1>Nuestros Productos</h1>
-        <p>Encuentra lo último en tecnología</p> */}
-        <div className="productos-stats">
-          {/* <span>{productos.length} productos encontrados</span> */}
-        </div>
-      </div>
-
-      <ProductoList 
-        productos={productos} 
-        onVerDetalle={handleVerDetalle}
-        loading={loading}
-      />
+      <div className="page-header"><div className="productos-stats" /></div>
+      <ProductoList productos={productos} onVerDetalle={handleVerDetalle} loading={loading} />
     </div>
   );
 };

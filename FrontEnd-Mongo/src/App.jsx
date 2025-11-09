@@ -6,11 +6,12 @@ import { ToastProvider } from './context/ToastContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Productos from './pages/Productos';
+import ProductoDetail from './pages/ProductoDetail';
 import Carrito from './pages/Carrito';
 import PagoExitoso from './pages/PagoExitoso';
 import Login from './pages/Login'; // 👈 Importar Login
 import Register from './pages/Register'; // 👈 Importar Register
-import './index.css';
+import Footer from "./pages/Footer";
 
 function App() {
   return (
@@ -20,10 +21,12 @@ function App() {
           <Router>
             <div className="App">
               <Navbar />
+              
               <main className="main-content">
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/productos" element={<Productos />} />
+                  <Route path="/productos/:id" element={<ProductoDetail />} />
                   <Route path="/carrito" element={<Carrito />} />
                   <Route path="/pago-exitoso" element={<PagoExitoso />} />
                   
@@ -37,8 +40,10 @@ function App() {
                       <p>La página que buscas no existe.</p>
                     </div>
                   } />
+                  
                 </Routes>
               </main>
+              <Footer />
             </div>
           </Router>
         </CartProvider>
